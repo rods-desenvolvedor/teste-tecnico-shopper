@@ -10,7 +10,7 @@
     "skipLibCheck": true,                        
     "moduleResolution": "node",                  
     "resolveJsonModule": true,                   
-    "types": ["node"],                           
+    "types": ["node", "jest"],                           
     "baseUrl": "./src"                           
   },
   "include": ["src"],
