@@ -36,7 +36,7 @@
             return;
         }
 
-        const geminiApiResponse = uploadImage(image, customer_code, measure_datetime, measure_type);
+        const geminiApiResponse = await uploadImage(image, customer_code, measure_datetime, measure_type);
 
         response.status(200).json(geminiApiResponse);
 
