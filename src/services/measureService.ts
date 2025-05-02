@@ -2,11 +2,15 @@ import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 import callGeminiApi from "./geminiService";
+import { UploadImageDTO, UploadImageResponseDTO } from "../dtos/uploadImageDTO";
 
-export default async function uploadImage(base64Image: string,customer_code: string,
-    measure_datetime: string,
-    measure_type: string): Promise<string> 
-{
+export default async function uploadImage({
+    base64Image,
+    customer_code,
+    measure_datetime,
+    measure_type
+}: UploadImageDTO): Promise<UploadImageResponseDTO> {
+
     const tempDir = path.resolve(__dirname, "../../temp");
 
     if (!fs.existsSync(tempDir)) {
@@ -28,12 +32,21 @@ export default async function uploadImage(base64Image: string,customer_code: str
             "Analisar essa imagem (pode ser um medidor de água ou de gás) e retornar a medição, não precisa dos valores após vírgula"
         );
 
-        // Limpa a pasta temp/
-        // Durante os testes, muitas imagens estavam se acumulando em temp/
-        // (talvez retirar em versões futuras)
-        await fs.promises.unlink(tempPath); 
+        // await fs.promises.unlink(tempPath);
 
-        return geminiResponse;
+        const image_url = `http://localhost:3000/temp/${filename}`;
+        const measure_uuid = uuidv4();
+        const measure_value = parseInt(geminiResponse.replace(/\D/g, ""), 10);
+
+        if (isNaN(measure_value)) {
+            throw new Error("Não foi possível interpretar um valor numérico válido da imagem.");
+        }
+
+        return {
+            image_url,
+            measure_value,
+            measure_uuid
+        };
 
     } catch (error) {
         console.error("Erro no uploadImage:", error);
