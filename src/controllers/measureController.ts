@@ -26,17 +26,20 @@ export async function uploadMeasure(request: Request, response: Response): Promi
                 error_code: "INVALID_DATA",
                 error_description: error.message
             });
+            return;
         } else if (error instanceof MeasureAlreadyExistsError) {
             response.status(409).json({
                 error_code: "MEASURE_ALREADY_EXISTS",
                 error_description: error.message
             });
+            return;
         } else {
             console.error("Erro no uploadMeasure:", error);
             response.status(500).json({
                 error_code: "UPLOAD_ERROR",
                 error_description: "Erro inesperado ao processar a medição."
             });
+            return;
         }
     }
 }
@@ -54,6 +57,7 @@ export async function confirmMeasure(request: Request, response: Response): Prom
             error_code: "INVALID_DATA",
             error_description: "Os dados fornecidos no corpo da requisição são inválidos."
         });
+        return;
     }
 
     try {
@@ -66,6 +70,7 @@ export async function confirmMeasure(request: Request, response: Response): Prom
                 error_code: "INVALID_DATA",
                 error_description: error.message
             });
+            return;
         }
 
         if (error instanceof MeasureNotFoundError) {
@@ -73,6 +78,7 @@ export async function confirmMeasure(request: Request, response: Response): Prom
                 error_code: "MEASURE_NOT_FOUND",
                 error_description: "Leitura não encontrada."
             });
+            return;
         }
 
         console.error("Erro no confirmMeasure:", error);
@@ -81,6 +87,7 @@ export async function confirmMeasure(request: Request, response: Response): Prom
             error_code: "CONFIRM_ERROR",
             error_description: "Erro inesperado ao processar a confirmação."
         });
+        return;
     }
 };
 
@@ -99,18 +106,21 @@ export async function listMeasure(request: Request, response: Response): Promise
                 error_code: "INVALID_TYPE",
                 error_description: error.message
             });
+            return;
         }
         if (error.statusCode === 404) {
             response.status(404).json({
                 error_code: "MEASURES_NOT_FOUND",
                 error_description: error.message
             });
+            return;
         }
         console.error("Erro no listMeasures:", error);
         response.status(500).json({
             error_code: "LIST_MEASURES_ERROR",
             error_description: "Erro inesperado ao listar as medições."
         });
+        return;
     }
 }
 
