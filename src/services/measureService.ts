@@ -110,3 +110,35 @@ export async function confirmMeasureService(measure_uuid: string, confirmed_valu
     (measure as any).confirmed_value = confirmed_value;
     await measure.save();
 }
+
+export async function listMeasuresService(customer_code: string, measure_type?: string) {
+    let filter: any = { customer_code };
+
+    if (measure_type) {
+        const normalizedType = measure_type.toUpperCase();
+        if (normalizedType !== "WATER" && normalizedType !== "GAS") {
+            throw new InvalidDataError("Tipo de medição não permitida");
+        }
+        filter.measure_type = normalizedType;
+    }
+
+    const measures = await Measure.find(filter).lean();
+
+    if (!measures || measures.length === 0) {
+        const error: any = new Error("Nenhuma leitura encontrada");
+        error.statusCode = 404;
+        error.error_code = "MEASURES_NOT_FOUND";
+        throw error;
+    }
+
+    return {
+        customer_code,
+        measures: measures.map(m => ({
+            measure_uuid: m.measure_uuid,
+            measure_datetime: m.measure_datetime,
+            measure_type: m.measure_type,
+            has_confirmed: m.has_confirmed ?? false,
+            image_url: m.image_url
+        }))
+    };
+}
