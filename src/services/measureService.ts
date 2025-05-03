@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { callGeminiApi } from "./geminiService";
 import { UploadImageDTO, UploadImageResponseDTO } from "../dtos/uploadImageDTO";
 import Measure from "../Models/Measure";
-import { InvalidDataError, MeasureAlreadyExistsError, GeminiApiError } from "../errors/measureError";
+import { InvalidDataError, MeasureAlreadyExistsError, GeminiApiError, MeasureNotFoundError } from "../errors/measureError";
 
 export default async function uploadImage({
     base64Image,
@@ -90,4 +90,23 @@ export default async function uploadImage({
         }
         throw new GeminiApiError();
     }
+}
+
+export async function confirmMeasureService(measure_uuid: string, confirmed_value: number): Promise<void> {
+    if (!measure_uuid || typeof measure_uuid !== "string" || confirmed_value === undefined || typeof confirmed_value !== "number" || !Number.isInteger(confirmed_value)) {
+        throw new InvalidDataError();
+    }
+
+    const measure = await Measure.findOne({ measure_uuid });
+
+    if (!measure) {
+        throw new MeasureNotFoundError();
+    }
+
+    if ((measure as any).confirmed_value !== undefined) {
+        throw new InvalidDataError("A leitura já foi confirmada anteriormente.");
+    }
+
+    (measure as any).confirmed_value = confirmed_value;
+    await measure.save();
 }
