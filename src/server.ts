@@ -3,7 +3,7 @@ import connectDatabase from "./configs/database";
 import app from "./app";
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 80;
 const MONGODB_URI = process.env.MONGODB_URI || "";
 
 async function startServer() {
