@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import uploadImage from "../services/measureService";
 import { InvalidDataError, MeasureAlreadyExistsError, MeasureNotFoundError } from "../errors/measureError";
-import { confirmMeasureService } from "../services/measureService";
+import { confirmMeasureService, listMeasuresService } from "../services/measureService";
 
 export async function uploadMeasure(request: Request, response: Response): Promise<void> {
     const { image, customer_code, measure_datetime, measure_type } = request.body;
@@ -83,6 +83,36 @@ export async function confirmMeasure(request: Request, response: Response): Prom
         });
     }
 };
+
+
+export async function listMeasure(request: Request, response: Response): Promise<void> {
+    const customer_code = request.params.customer_code;
+    const measure_type = request.query.measure_type as string | undefined;
+
+    try {
+        const result = await listMeasuresService(customer_code, measure_type);
+        response.status(200).json(result);
+
+    } catch (error: any) {
+        if (error instanceof InvalidDataError) {
+            response.status(400).json({
+                error_code: "INVALID_TYPE",
+                error_description: error.message
+            });
+        }
+        if (error.statusCode === 404) {
+            response.status(404).json({
+                error_code: "MEASURES_NOT_FOUND",
+                error_description: error.message
+            });
+        }
+        console.error("Erro no listMeasures:", error);
+        response.status(500).json({
+            error_code: "LIST_MEASURES_ERROR",
+            error_description: "Erro inesperado ao listar as medições."
+        });
+    }
+}
 
 
 
