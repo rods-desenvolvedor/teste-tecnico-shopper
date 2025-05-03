@@ -8,6 +8,7 @@ export interface IMeasure extends Document {
     image_url: string;
     measure_uuid: string;
     created_at: Date;
+    has_confirmed?: boolean;
 }
 
 const MeasureSchema: Schema = new Schema({
@@ -40,6 +41,10 @@ const MeasureSchema: Schema = new Schema({
         type: Date,
         default: Date.now,
     },
+    has_confirmed: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 const Measure = mongoose.model<IMeasure>("Measure", MeasureSchema);
