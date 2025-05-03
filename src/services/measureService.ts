@@ -26,6 +26,18 @@ export default async function uploadImage({
         throw new InvalidDataError();
     }
 
+    if (!customer_code || typeof customer_code !== "string") {
+        throw new InvalidDataError("O código do cliente é obrigatório.");
+    }
+
+    if (!measure_type || !["WATER", "GAS"].includes(measure_type)) {
+        throw new InvalidDataError("O tipo de medição é obrigatório e deve ser 'WATER' ou 'GAS'.");
+    }
+
+    if (!measure_datetime || isNaN(new Date(measure_datetime).getTime())) {
+        throw new InvalidDataError("A data da medição é obrigatória e deve ser uma data válida.");
+    }
+
     try {
         await fs.promises.writeFile(tempPath, Buffer.from(base64Image, "base64"));
 
