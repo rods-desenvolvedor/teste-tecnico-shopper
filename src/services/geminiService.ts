@@ -47,5 +47,3 @@ export async function callGeminiApi(filePath: string, aiPrompt: string): Promise
     throw error;
   }
 }
-
-export default callGeminiApi;

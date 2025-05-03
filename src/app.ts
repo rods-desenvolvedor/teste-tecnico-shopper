@@ -1,5 +1,5 @@
 import express from "express";
-import callGeminiApi from "./services/geminiService";
+import {callGeminiApi} from "./services/geminiService";
 import path from "path";
 import { uploadMeasure } from "./controllers/measureController";
 import measureRoutes from "./routes/measureRoute";

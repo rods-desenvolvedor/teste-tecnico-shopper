@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
-import callGeminiApi from "./geminiService";
+import {callGeminiApi} from "./geminiService";
 import { UploadImageDTO, UploadImageResponseDTO } from "../dtos/uploadImageDTO";
 
 export default async function uploadImage({
