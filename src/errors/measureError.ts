@@ -19,3 +19,11 @@ export class GeminiApiError extends Error {
         this.name = "GeminiApiError";
     }
 }
+
+export class MeasureNotFoundError extends Error {
+    constructor(message = "Leitura não encontrada.") {
+        super(message);
+        this.name = "MeasureNotFoundError";
+    }
+}
+
