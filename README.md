@@ -45,11 +45,11 @@ sso fará o seguinte:
 
 Subirá o container do MongoDB na porta 27017
 
-Subirá o container da aplicação na porta 3000
+Subirá o container da aplicação na porta 80
 
 A API estará disponível em:
 
-http://localhost:3000
+http://localhost:80
 
 Para encerrar os containers:
 
@@ -69,7 +69,7 @@ npm run dev
 
 A API estará disponível em:
 
-http://localhost:3000
+http://localhost:80
 
 ## Endpoints disponíveis
 POST /upload
@@ -99,8 +99,6 @@ tests: Testes unitários
 
 ## Observações
 A pasta temp/ (onde as imagens são salvas temporariamente) está no .gitignore e não é enviada para o repositório. Ela será criada automaticamente quando as imagens forem processadas.
-
-Certifique-se de que sua chave da API Gemini está válida antes de realizar testes com upload de imagens.
 
 Limpeza de arquivos temporários
 Atualmente, o projeto não implementa a remoção automática dos arquivos da pasta temp/. Se necessário, essa limpeza pode ser feita manualmente sem impactar o funcionamento da API (as URLs das imagens antigas podem quebrar após a exclusão).
